@@ -1,0 +1,28 @@
+eventループ(5→6→5)
+|
++- xferループ(6→7→6)
+   |
+   +- DAT_IMAGENATIVEXFER(6→7)
+      |
+      +- TWRC_XFERDONE(7)
+      |  |
+      |  +- MSG_ENDXFER(7→6)
+      |     |
+      |     +- pendingCountがゼロ(5)-->xferループをぬけ次のeventループへ
+      |     |
+      |     +- pendingCountがゼロでない(6)------------->次のxferループへ
+      |
+      +- TWRC_CANCEL(7)
+      |  |
+      |  +- MSG_ENDXFER(7→6)
+      |     |
+      |     +- pendingCountがゼロ(5)-->xferループをぬけ次のeventループへ
+      |     |
+      |     +- pendingCountがゼロでない(6)
+      |        |
+      |        +- MSG_RESET(6→5)----->xferループをぬけ次のeventループへ
+      |
+      +- TWRC_FAILURE(6)
+         |
+         +- MSG_RESET(6→5)----------->xferループをぬけ次のeventループへ
+

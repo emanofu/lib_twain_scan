@@ -1,0 +1,58 @@
+.SUFFIXES: .obj .cxx
+# Development
+#	Microsoft Visual Studio 2010  Version 10.0.40219.1 SP1Rel
+#	Microsoft Visual C++ 2010  01018-532-2002181-70143
+#	Microsoft(R) C/C++  16.00.40219.01 for x64
+# Caution
+#	Must Not Set "LIB" or "INCLUDE" parameter with MS-C
+# Utility
+#	dumpbin /exports xxxxx.dll
+#	dumpbin /dependents xxxxx.dll
+#	dumpbin /symbols xxxxx.lib
+# Set x86(32bits) Environment
+#	call "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
+# Set amd64(64bits) Environment
+#	call "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" amd64
+# One Step Build
+#	nmake /f makefile-vc2010mt all inst clean_obj
+#---define--------------------------------------------------------------
+APPLICATION_NAME = gts
+NAME = libcxx51iip_canvas
+IDE_TYPE = vc2010mt
+OPTS = /W4 /WX /MT /EHa /O2 /wd4819
+# /wd4819 : Stop warning message by EUC-JP Code in comment
+INCS =\
+/I.\
+/I..\libcxx31calcu_precision\
+/I..\libc12pri\
+/I..\libc11portable
+SRCS =\
+iip_canvas.cxx\
+iip_channel_info.cxx
+#------
+TARG = $(NAME).lib
+OBJS = $(SRCS:.cxx=.obj)
+DPATH_UTIL = %HOMEDRIVE%%%HOMEPATH%\utility_tools
+DPATH_IDET = $(DPATH_UTIL)\$(IDE_TYPE)
+DPATH_PROC = $(DPATH_IDET)\$(PROCESSOR_ARCHITECTURE)
+DPATH_APPL = $(DPATH_PROC)\$(APPLICATION_NAME)
+DPATH_LIBR = $(DPATH_APPL)\lib
+DPATH_OBJE = $(DPATH_APPL)\obj
+CC_OPTIONS = $(CXXFLAGS) $(OPTS) $(INCS)
+#---action--------------------------------------------------------------
+all: make_obj_dir $(TARG)
+make_obj_dir:
+	if not exist $(DPATH_UTIL) (mkdir $(DPATH_UTIL))
+	if not exist $(DPATH_IDET) (mkdir $(DPATH_IDET))
+	if not exist $(DPATH_PROC) (mkdir $(DPATH_PROC))
+	if not exist $(DPATH_APPL) (mkdir $(DPATH_APPL))
+	if not exist $(DPATH_LIBR) (mkdir $(DPATH_LIBR))
+	if not exist $(DPATH_OBJE) (mkdir $(DPATH_OBJE))
+$(TARG): $(OBJS)
+	pushd $(DPATH_OBJE) & lib /wx $? /out:$(DPATH_LIBR)/$@.new & popd
+.cxx.obj:
+	cl $(CC_OPTIONS) /c $< /Fo$(DPATH_OBJE)/$@
+inst:
+	move $(DPATH_LIBR)\$(TARG).new $(DPATH_LIBR)\$(TARG)
+clean_obj:
+	pushd $(DPATH_OBJE) & del $(OBJS) & popd

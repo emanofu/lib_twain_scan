@@ -1,0 +1,52 @@
+.SUFFIXES: .obj .cxx
+# Set VC2010 x86(32bits) Environment
+#	call "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
+# Set VC2010 amd64(64bits) Environment
+#	call "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" amd64
+# One Step Build
+#	nmake /f makefile-vc2010md all inst clean_obj
+#---define--------------------------------------------------------------
+APPLICATION_NAME = gts
+NAME = twain_scan_comm
+IDE_TYPE = vc2010md
+OPTS = /W4 /WX /MD /EHa /O2 /wd4819
+# /wd4819 : Stop warning message by EUC-JP Code in comment
+# /wd4996 : Stop warning message by MS-C old function
+INCS =\
+/I.\
+/I..\libcxx55iip_scan\
+/I..\libcxx51iip_canvas\
+/I..\libc12pri\
+/I..\libc11portable\
+/I..\..\..\twain.h
+SRCS = main.cxx
+LIBS=\
+$(DPATH_LIBR)\libcxx55iip_scan.lib\
+$(DPATH_LIBR)\libcxx51iip_canvas.lib\
+$(DPATH_LIBR)\libc12pri.lib\
+$(DPATH_LIBR)\libc11portable.lib\
+user32.lib
+#------
+TARG = $(NAME).exe
+OBJS = $(SRCS:.cxx=.obj)
+DPATH_UTIL = %HOMEDRIVE%%%HOMEPATH%\utility_tools
+DPATH_IDET = $(DPATH_UTIL)\$(IDE_TYPE)
+DPATH_PROC = $(DPATH_IDET)\$(PROCESSOR_ARCHITECTURE)
+DPATH_APPL = $(DPATH_PROC)\$(APPLICATION_NAME)
+DPATH_LIBR = $(DPATH_APPL)\lib
+DPATH_OBJE = $(DPATH_APPL)\obj
+DPATH_BINA = $(DPATH_APPL)\bin
+CC_OPTIONS = $(CXXFLAGS) $(OPTS) $(INCS)
+#---action--------------------------------------------------------------
+all: make_bin_dir $(TARG)
+make_bin_dir:
+	if not exist $(DPATH_BINA) (mkdir $(DPATH_BINA))
+$(TARG):$(OBJS)
+	pushd $(DPATH_OBJE) &  link $(OBJS) $(LIBS) /out:$(DPATH_BINA)\$@.new & popd
+.cxx.obj:
+	cl $(CC_OPTIONS) /c $< /Fo$(DPATH_OBJE)/$@
+inst:
+	move $(DPATH_BINA)\$(TARG).new $(DPATH_BINA)\$(TARG)
+clean_obj:
+	pushd $(DPATH_OBJE) & del $(OBJS) & popd
+#

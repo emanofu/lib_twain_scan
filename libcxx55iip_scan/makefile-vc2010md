@@ -1,0 +1,101 @@
+.SUFFIXES: .obj .cxx
+# Development
+#	Microsoft Visual Studio 2010  Version 10.0.40219.1 SP1Rel
+#	Microsoft Visual C++ 2010  01018-532-2002181-70143
+#	Microsoft(R) C/C++  16.00.40219.01 for x64
+# Caution
+#	Must Not Set "LIB" or "INCLUDE" parameter with MS-C
+# Utility
+#	dumpbin /exports xxxxx.dll
+#	dumpbin /dependents xxxxx.dll
+#	dumpbin /symbols xxxxx.lib
+# Set x86(32bits) Environment
+#	call "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
+# Set amd64(64bits) Environment
+#	call "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" amd64
+# One Step Build
+#	nmake /f makefile-vc2010md all inst clean_obj
+#---define--------------------------------------------------------------
+APPLICATION_NAME = gts
+NAME = libcxx55iip_scan
+IDE_TYPE = vc2010md
+OPTS = /W4 /WX /MD /EHa /O2 /wd4819 /wd4996
+# /wd4819 : Stop warning message by EUC-JP Code in comment
+# /wd4996 : Stop warning message by MS-C old function
+INCS =\
+/I.\
+/I..\libcxx51iip_canvas\
+/I..\libc12pri\
+/I..\libc11portable\
+/I..\twain.h
+SRCS =\
+tw_win_l1_dsm_entry.cxx\
+tw_win_l1_dsm_get_cc.cxx\
+tw_win_l1_dsm_init_tw_id.cxx\
+tw_win_l1_dsm_pri_cc.cxx\
+tw_win_l1_dsm_pri_error.cxx\
+tw_win_l1_dsm_state1to2.cxx\
+tw_win_l1_dsm_state2to1.cxx\
+tw_win_l1_dsm_state2to3.cxx\
+tw_win_l1_dsm_state3to2.cxx\
+tw_win_l1_dsm_state3to4.cxx\
+tw_win_l1_dsm_state4to3.cxx\
+tw_win_l2_dss_calc.cxx\
+tw_win_l2_dss_cap_get_ctnr.cxx\
+tw_win_l2_dss_cap_get_ctnr_onev.cxx\
+tw_win_l2_dss_cap_get_ctnr_range.cxx\
+tw_win_l2_dss_cap_get_param_onev.cxx\
+tw_win_l2_dss_cap_pri_ctnr_enum.cxx\
+tw_win_l2_dss_cap_pri_ctnr_onev.cxx\
+tw_win_l2_dss_cap_pri_ctnr_range.cxx\
+tw_win_l2_dss_cap_pri_param_enum.cxx\
+tw_win_l2_dss_cap_pri_param_onev.cxx\
+tw_win_l2_dss_cap_pri_param_range.cxx\
+tw_win_l2_dss_cap_set_ctnr.cxx\
+tw_win_l2_dss_cap_set_ctnr_onev.cxx\
+tw_win_l2_dss_cap_set_param_onev.cxx\
+tw_win_l2_dss_imageinfo_get.cxx\
+tw_win_l2_dss_imageinfo_get_reso.cxx\
+tw_win_l2_dss_imageinfo_pri.cxx\
+tw_win_l2_dss_imageinfo_pri_all.cxx\
+tw_win_l2_dss_imagelayout_get.cxx\
+tw_win_l2_dss_imagelayout_pri.cxx\
+tw_win_l2_dss_imagelayout_pri_all.cxx\
+tw_win_l2_dss_imagelayout_set.cxx\
+tw_win_l2_dss_imagelayout_set_area.cxx\
+tw_win_l2_dss_setupmemxfer_pri.cxx\
+tw_win_l3_dsi_state4to5.cxx\
+tw_win_l3_dsi_state5to4.cxx\
+tw_win_l3_dsi_state5to6to5event.cxx\
+tw_win_l3_dsi_state6to7to6native.cxx\
+tw_win_l3_dsi_state6to7to6select.cxx\
+tw_win_l4_scan_orc.cxx\
+tw_win_l4_scan_pri_dib_header.cxx\
+tw_win_l4_scan_trans_image.cxx
+#------
+TARG = $(NAME).lib
+OBJS = $(SRCS:.cxx=.obj)
+DPATH_UTIL = %HOMEDRIVE%%%HOMEPATH%\utility_tools
+DPATH_IDET = $(DPATH_UTIL)\$(IDE_TYPE)
+DPATH_PROC = $(DPATH_IDET)\$(PROCESSOR_ARCHITECTURE)
+DPATH_APPL = $(DPATH_PROC)\$(APPLICATION_NAME)
+DPATH_LIBR = $(DPATH_APPL)\lib
+DPATH_OBJE = $(DPATH_APPL)\obj
+CC_OPTIONS = $(CXXFLAGS) $(OPTS) $(INCS)
+#---action--------------------------------------------------------------
+all: make_obj_dir $(TARG)
+make_obj_dir:
+	if not exist $(DPATH_UTIL) (mkdir $(DPATH_UTIL))
+	if not exist $(DPATH_IDET) (mkdir $(DPATH_IDET))
+	if not exist $(DPATH_PROC) (mkdir $(DPATH_PROC))
+	if not exist $(DPATH_APPL) (mkdir $(DPATH_APPL))
+	if not exist $(DPATH_LIBR) (mkdir $(DPATH_LIBR))
+	if not exist $(DPATH_OBJE) (mkdir $(DPATH_OBJE))
+$(TARG): $(OBJS)
+	pushd $(DPATH_OBJE) & lib /wx $? /out:$(DPATH_LIBR)/$@.new & popd
+.cxx.obj:
+	cl $(CC_OPTIONS) /c $< /Fo$(DPATH_OBJE)/$@
+inst:
+	move $(DPATH_LIBR)\$(TARG).new $(DPATH_LIBR)\$(TARG)
+clean_obj:
+	pushd $(DPATH_OBJE) & del $(OBJS) & popd

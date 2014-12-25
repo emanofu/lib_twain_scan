@@ -1,0 +1,35 @@
+----------------+-----------+-----------+--------------+---------
+capability       Setコンテナ 値の型      Getコンテナ    Default値
+----------------+-----------+-----------+--------------+---------
+ICAP_BRIGHTNESS  TW_ONEVALUE TWTY_FIX32  TW_RANGE       0(-1000...+1000)
+ICAP_CONTRAST    TW_ONEVALUE TWTY_FIX32  TW_RANGE       0(-1000...+1000)
+ICAP_GAMMA       TW_ONEVALUE TWTY_FIX32  TW_ONEVALUE    2.2
+CAP_INDICATORS   TW_ONEVALUE TWTY_BOOL   TW_ONEVALUE    TRUE(TRUE,FLASE)
+ICAP_XRESOLUTION TW_ONEVALUE TWTY_FIX32  TW_RANGE       72
+ICAP_YRESOLUTION TW_ONEVALUE TWTY_FIX32  TW_RANGE       72
+ICAP_UNITS       TW_ONEVALUE TWTY_UINT16 TW_ENUMERATION TWUN_INCHES
+			( TWUN_INCHES, TWUN_CENTIMETERS, TWUN_PIXELS )
+ICAP_XFERMECH    TW_ONEVALUE TWTY_UINT16 TW_ENUMERATION TWSX_NATIVE
+			( TWSX_NATIVE, TWSX_MEMORY )
+ICAP_PIXELTYPE   TW_ONEVALUE TWTY_UINT16 TW_ENUMERATION TWPT_RGB
+			( TWPT_BW, TWPT_GRAY, TWPT_RGB )
+ICAP_THRESHOLD   TW_ONEVALUE TWTY_FIX32  TW_RANGE       128(0...255)
+
+ICAP_BITDEPTH    TW_ONEVALUE TWTY_UINT16 TW_ENUMERATION 8
+			( 1, 8, 16 )
+----------------+-----------+-----------+--------------+---------
+
+----------------------+-----------+-----------+----------
+capability             Setコンテナ 値の型      Getコンテナ
+----------------------+-----------+-----------+----------
+ICAP_XNATIVERESOLUTION ----------- TWTY_FIX32  TW_ONEVALUE
+ICAP_YNATIVERESOLUTION ----------- TWTY_FIX32  TW_ONEVALUE
+ICAP_PHYSICALWIDTH     ----------- TWTY_FIX32  TW_ONEVALUE
+ICAP_PHYSICALHEIGHT    ----------- TWTY_FIX32  TW_ONEVALUE
+CAP_UICONTROLLABLE     ----------- TWTY_BOOL   TW_ONEVALUE
+----------------------+-----------+-----------+----------
+
+---------------------------------------------------------
+TW_IMAGELAYOUT	left,top,right,bottom
+TW_IMAGEINFO	xres,yres,width,height,samplesperpixel...
+---------------------------------------------------------
